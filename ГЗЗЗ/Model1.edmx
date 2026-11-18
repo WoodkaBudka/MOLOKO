@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище DairyFactoryModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Cust_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="INN_Code" Type="varchar" MaxLength="12" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Buyer" Type="bit" />
+          <Property Name="Salesman" Type="bit" />
+          <Property Name="Phone_Num" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="Material_ID" />
+          </Key>
+          <Property Name="Material_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Mat_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Unit_Name" Type="nvarchar" MaxLength="10" />
+          <Property Name="Price_Mat" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="Order_Details">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="int" Nullable="false" />
+          <Property Name="Product_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Price_Item" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Total_Item" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="int" Nullable="false" />
+          <Property Name="Order_Date" Type="date" />
+          <Property Name="Customer_ID" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Prod_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Unit_Name" Type="nvarchar" MaxLength="10" />
+          <Property Name="Price_Prod" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="Specifications">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+            <PropertyRef Name="Material_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Material_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Qty_Needed" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Role" Type="nchar" MaxLength="50" />
+          <Property Name="Login" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__Order_Det__Order__534D60F1">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="Order_ID" />
+            </Principal>
+            <Dependent Role="Order_Details">
+              <PropertyRef Name="Order_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Det__Produ__5441852A">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_ID" />
+            </Principal>
+            <Dependent Role="Order_Details">
+              <PropertyRef Name="Product_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Customer__5070F446">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="Customer_ID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Customer_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Specifica__Mater__5812160E">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="Specifications" Type="Self.Specifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="Material_ID" />
+            </Principal>
+            <Dependent Role="Specifications">
+              <PropertyRef Name="Material_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Specifica__Produ__571DF1D5">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Specifications" Type="Self.Specifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_ID" />
+            </Principal>
+            <Dependent Role="Specifications">
+              <PropertyRef Name="Product_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище DairyFactoryModelContainer">
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Details" EntityType="Self.Order_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Specifications" EntityType="Self.Specifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Order_Det__Order__534D60F1" Association="Self.FK__Order_Det__Order__534D60F1">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_Details" EntitySet="Order_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Det__Produ__5441852A" Association="Self.FK__Order_Det__Produ__5441852A">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_Details" EntitySet="Order_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Customer__5070F446" Association="Self.FK__Orders__Customer__5070F446">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Specifica__Mater__5812160E" Association="Self.FK__Specifica__Mater__5812160E">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="Specifications" EntitySet="Specifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Specifica__Produ__571DF1D5" Association="Self.FK__Specifica__Produ__571DF1D5">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Specifications" EntitySet="Specifications" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DairyFactoryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cust_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="INN_Code" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Buyer" Type="Boolean" />
+          <Property Name="Salesman" Type="Boolean" />
+          <Property Name="Phone_Num" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__Customer__5070F446" FromRole="Customers" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="Material_ID" />
+          </Key>
+          <Property Name="Material_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Mat_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit_Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Price_Mat" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Specifications" Relationship="Self.FK__Specifica__Mater__5812160E" FromRole="Materials" ToRole="Specifications" />
+        </EntityType>
+        <EntityType Name="Order_Details">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="Int32" Nullable="false" />
+          <Property Name="Product_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price_Item" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Total_Item" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Order_Det__Order__534D60F1" FromRole="Order_Details" ToRole="Orders" />
+          <NavigationProperty Name="Products" Relationship="Self.FK__Order_Det__Produ__5441852A" FromRole="Order_Details" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="Int32" Nullable="false" />
+          <Property Name="Order_Date" Type="DateTime" Precision="0" />
+          <Property Name="Customer_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.FK__Orders__Customer__5070F446" FromRole="Orders" ToRole="Customers" />
+          <NavigationProperty Name="Order_Details" Relationship="Self.FK__Order_Det__Order__534D60F1" FromRole="Orders" ToRole="Order_Details" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Prod_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit_Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Price_Prod" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Order_Details" Relationship="Self.FK__Order_Det__Produ__5441852A" FromRole="Products" ToRole="Order_Details" />
+          <NavigationProperty Name="Specifications" Relationship="Self.FK__Specifica__Produ__571DF1D5" FromRole="Products" ToRole="Specifications" />
+        </EntityType>
+        <EntityType Name="р">
+          <Key>
+            <PropertyRef Name="Product_ID" />
+            <PropertyRef Name="Material_ID" />
+          </Key>
+          <Property Name="Product_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Material_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Qty_Needed" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Materials" Relationship="Self.FK__Specifica__Mater__5812160E" FromRole="Specifications" ToRole="Materials" />
+          <NavigationProperty Name="Products" Relationship="Self.FK__Specifica__Produ__571DF1D5" FromRole="Specifications" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK__Orders__Customer__5070F446">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="Customer_ID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Customer_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Specifica__Mater__5812160E">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="Specifications" Type="DairyFactoryModel.р" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="Material_ID" />
+            </Principal>
+            <Dependent Role="Specifications">
+              <PropertyRef Name="Material_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Det__Order__534D60F1">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="Order_ID" />
+            </Principal>
+            <Dependent Role="Order_Details">
+              <PropertyRef Name="Order_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Det__Produ__5441852A">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Order_Details" Type="Self.Order_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_ID" />
+            </Principal>
+            <Dependent Role="Order_Details">
+              <PropertyRef Name="Product_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Specifica__Produ__571DF1D5">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Specifications" Type="DairyFactoryModel.р" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_ID" />
+            </Principal>
+            <Dependent Role="Specifications">
+              <PropertyRef Name="Product_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DairyFactoryEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="Self.Customers" />
+          <EntitySet Name="Materials" EntityType="Self.Materials" />
+          <EntitySet Name="Order_Details" EntityType="Self.Order_Details" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" />
+          <EntitySet Name="Products" EntityType="Self.Products" />
+          <EntitySet Name="Specifications" EntityType="DairyFactoryModel.р" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <AssociationSet Name="FK__Orders__Customer__5070F446" Association="Self.FK__Orders__Customer__5070F446">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Specifica__Mater__5812160E" Association="Self.FK__Specifica__Mater__5812160E">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="Specifications" EntitySet="Specifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Det__Order__534D60F1" Association="Self.FK__Order_Det__Order__534D60F1">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_Details" EntitySet="Order_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Det__Produ__5441852A" Association="Self.FK__Order_Det__Produ__5441852A">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_Details" EntitySet="Order_Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Specifica__Produ__571DF1D5" Association="Self.FK__Specifica__Produ__571DF1D5">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Specifications" EntitySet="Specifications" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DairyFactoryModelContainer" CdmEntityContainer="DairyFactoryEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Customers">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="Cust_Name" ColumnName="Cust_Name" />
+                <ScalarProperty Name="INN_Code" ColumnName="INN_Code" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Buyer" ColumnName="Buyer" />
+                <ScalarProperty Name="Salesman" ColumnName="Salesman" />
+                <ScalarProperty Name="Phone_Num" ColumnName="Phone_Num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Materials">
+              <MappingFragment StoreEntitySet="Materials">
+                <ScalarProperty Name="Material_ID" ColumnName="Material_ID" />
+                <ScalarProperty Name="Mat_Name" ColumnName="Mat_Name" />
+                <ScalarProperty Name="Unit_Name" ColumnName="Unit_Name" />
+                <ScalarProperty Name="Price_Mat" ColumnName="Price_Mat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Details">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Order_Details">
+              <MappingFragment StoreEntitySet="Order_Details">
+                <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price_Item" ColumnName="Price_Item" />
+                <ScalarProperty Name="Total_Item" ColumnName="Total_Item" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Orders">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+                <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Prod_Name" ColumnName="Prod_Name" />
+                <ScalarProperty Name="Unit_Name" ColumnName="Unit_Name" />
+                <ScalarProperty Name="Price_Prod" ColumnName="Price_Prod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specifications">
+            <EntityTypeMapping TypeName="DairyFactoryModel.р">
+              <MappingFragment StoreEntitySet="Specifications">
+                <ScalarProperty Name="Product_ID" ColumnName="Product_ID" />
+                <ScalarProperty Name="Material_ID" ColumnName="Material_ID" />
+                <ScalarProperty Name="Qty_Needed" ColumnName="Qty_Needed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DairyFactoryModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="DairyFactoryModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
